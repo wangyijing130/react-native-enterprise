@@ -1,4 +1,4 @@
-package com.simpleapp;
+package com.enterprises;
 
 import android.app.Application;
 
