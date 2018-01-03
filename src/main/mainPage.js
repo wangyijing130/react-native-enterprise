@@ -5,8 +5,10 @@ import {
     StyleSheet,
     TouchableOpacity,
 } from 'react-native';
-import {connect} from 'react-redux'; // 引入connect函数
+import {connect} from 'react-redux';
 import {NavigationActions} from 'react-navigation';
+import {THEME_BACKGROUND} from '../css/color';
+import {getDefautNavOps} from '../common/globel';
 
 // 清空导航记录，跳转到登录页
 const resetAction = NavigationActions.reset({
@@ -17,10 +19,7 @@ const resetAction = NavigationActions.reset({
 });
 
 class MainPage extends Component {
-
-    static navigationOptions = {
-        title: '首页',
-    };
+    static navigationOptions = getDefautNavOps('首页');
 
     logout() {
         this.props.navigation.dispatch(resetAction)
@@ -45,8 +44,10 @@ class MainPage extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
+        flexDirection: 'column',
+        justifyContent: 'center',
+        padding: 20,
+        backgroundColor: THEME_BACKGROUND
     }
 });
 
