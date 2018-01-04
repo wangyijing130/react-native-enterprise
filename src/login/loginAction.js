@@ -5,7 +5,7 @@ import * as types from '../constants/loginTypes';
 // 模拟用户信息
 let user = {
     name: 'eking',
-    nikename: '羿璟',
+    nikeName: '羿璟',
     age: 30,
     pwd: '123456'
 };
@@ -16,17 +16,17 @@ export function login(username, password) {
     return dispatch => {
         dispatch(isLogining());
         // 模拟用户登录
-        if(username === user.name && password === user.pwd) {
+        if (username === user.name && password === user.pwd) {
             dispatch(loginSuccess(true, user));
         } else {
             dispatch(loginError(false));
         }
         /*let result = fetch('https://www.baidu.com/')
-            .then((res) => {
-                dispatch(loginSuccess(true, user));
-            }).catch((e) => {
-                dispatch(loginError(false));
-            })*/
+         .then((res) => {
+         dispatch(loginSuccess(true, user));
+         }).catch((e) => {
+         dispatch(loginError(false));
+         })*/
     }
 }
 
@@ -48,5 +48,45 @@ function loginError(isSuccess) {
     console.log('error');
     return {
         type: types.LOGIN_IN_ERROR,
+    }
+}
+
+export function reg(username, password) {
+    console.log('注册方法');
+    return dispatch => {
+        dispatch(isReging());
+        // 模拟用户登录
+        if (username === user.name && password === user.pwd) {
+            dispatch(regSuccess(true, user));
+        } else {
+            dispatch(regError(false));
+        }
+        /*let result = fetch('https://www.baidu.com/')
+         .then((res) => {
+         dispatch(loginSuccess(true, user));
+         }).catch((e) => {
+         dispatch(loginError(false));
+         })*/
+    }
+}
+
+function isReging() {
+    return {
+        type: types.REG_DOING
+    }
+}
+
+function regSuccess(isSuccess, user) {
+    console.log('success');
+    return {
+        type: types.REG_DONE,
+        user: user,
+    }
+}
+
+function regError(isSuccess) {
+    console.log('error');
+    return {
+        type: types.REG_ERROR,
     }
 }

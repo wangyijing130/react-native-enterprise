@@ -3,9 +3,9 @@ import {View, Text, StyleSheet, TouchableOpacity, TextInput, Button} from 'react
 import {connect} from 'react-redux'; // 引入connect函数
 import * as loginAction from './loginAction';// 导入action方法
 import {NavigationActions} from 'react-navigation';
-import {THEME_BACKGROUND} from '../css/color';
-import {getDefautNavOps} from '../common/globel';
-import {defaultStyles} from '../css/layout';
+import {THEME_BACKGROUND} from '../assets/css/color';
+import {DefaultStackNavigator} from '../common/globel';
+import {defaultStyles} from '../assets/css/layout';
 
 // 清空导航记录，跳转到首页
 const resetAction = NavigationActions.reset({
@@ -16,7 +16,10 @@ const resetAction = NavigationActions.reset({
 });
 
 class LoginPage extends Component {
-    static navigationOptions = getDefautNavOps('登录');
+    static navigationOptions = {
+        header: null
+    };
+    // static navigationOptions = DefaultStackNavigator('注册');
 
     username = 'eking';
     password = '123456';
@@ -31,19 +34,31 @@ class LoginPage extends Component {
         return true;
     }
 
+    doLogin() {
+        const {login} = this.props;
+        login(this.username, this.password);
+    }
+
+    doReg() {
+        this.props.navigation.navigate('Reg');
+    }
+
     render() {
         const {login} = this.props;
         return (
             <View style={styles.loginPage}>
                 <Text>状态: {this.props.status}</Text>
-                <TextInput style={styles.loginInput} placeholder='username'
-                           value={this.username} autoCapitalize={'none'}
+                <TextInput style={styles.loginInput} placeholder='username' keyboardType={'numeric'}
+                           defaultValue={this.username} autoCapitalize={'none'} maxLength={20}
                            onChangeText={(text) => this.username = text}/>
                 <TextInput style={styles.loginInput} placeholder='password' secureTextEntry={true}
-                           value={this.password} autoCapitalize={'none'}
+                           defaultValue={this.password} autoCapitalize={'none'} maxLength={20}
                            onChangeText={(text) => this.password = text}/>
-                <TouchableOpacity style={defaultStyles.Button} onPress={() => login(this.username, this.password)}>
-                    <Text style={defaultStyles.ButtonText}>Login</Text>
+                <TouchableOpacity style={[defaultStyles.Button, styles.loginInput]} onPress={() => this.doLogin()}>
+                    <Text style={defaultStyles.ButtonText}>登录</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[defaultStyles.Button, styles.loginInput]} onPress={() => this.doReg()}>
+                    <Text style={defaultStyles.ButtonText}>注册</Text>
                 </TouchableOpacity>
             </View>
         )

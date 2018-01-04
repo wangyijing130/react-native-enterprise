@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {connect} from 'react-redux';
 import {NavigationActions} from 'react-navigation';
-import {THEME_BACKGROUND} from '../assets/css/color';
+import {THEME, THEME_BACKGROUND} from '../assets/css/color';
 import {DefaultStackNavigator} from '../common/globel';
 
 // 清空导航记录，跳转到登录页
@@ -13,8 +13,16 @@ const resetAction = NavigationActions.reset({
     ]
 });
 
-class MainPage extends Component {
-    static navigationOptions = DefaultStackNavigator('首页');
+class PersonPage extends Component {
+    static navigationOptions = {
+       tabBarLabel: '我的',
+        tabBarIcon: ({tintColor}) => (
+            <Image
+                source={require('../assets/images/person.png')}
+                style={[styles.icon, {tintColor: tintColor}]}
+            />
+        ),
+    };
 
     logout() {
         this.props.navigation.dispatch(resetAction)
@@ -24,11 +32,11 @@ class MainPage extends Component {
         const {user} = this.props.navigation;
         return (
             <View style={styles.container}>
-                <Text style={{fontSize: 20}}>欢迎使用本产品！</Text>
+                <Text style={{fontSize: 20}}>您好,{user}!</Text>
+                <Text>欢迎使用本产品！</Text>
                 <TouchableOpacity onPress={this.logout.bind(this)} style={{marginTop: 50}}>
                     <View>
-                        <Text>退出登录
-                        </Text>
+                        <Text>退出登录</Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -37,6 +45,10 @@ class MainPage extends Component {
 }
 
 const styles = StyleSheet.create({
+    icon: {
+        width: 26,
+        height: 26,
+    },
     container: {
         flex: 1,
         flexDirection: 'column',
@@ -51,4 +63,4 @@ export default connect(
         user: state.user
     }),
     (dispatch) => ({})
-)(MainPage)
+)(PersonPage)

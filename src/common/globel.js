@@ -1,6 +1,6 @@
 import React from 'react';
-import {THEME} from '../css/color';
-export function getDefautNavOps(title) {
+import {THEME} from '../assets/css/color';
+export function DefaultStackNavigator(title) {
     return {
         title: title || '',
         headerTintColor: 'white',
