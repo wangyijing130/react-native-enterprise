@@ -34,7 +34,6 @@ export default function loginIn(state = initialState, action) {
             };
             break;
         default:
-            console.log(state);
             return state;
     }
 }

@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {View, Text, StyleSheet, Image} from 'react-native';
 import {connect} from 'react-redux';
 import {NavigationActions} from 'react-navigation';
 import {THEME, THEME_BACKGROUND} from '../assets/css/color';
-import {DefaultStackNavigator} from '../common/globel';
+import CButton from '../common/button';
 
 // 清空导航记录，跳转到登录页
 const resetAction = NavigationActions.reset({
@@ -15,7 +15,7 @@ const resetAction = NavigationActions.reset({
 
 class PersonPage extends Component {
     static navigationOptions = {
-       tabBarLabel: '我的',
+        tabBarLabel: '我的',
         tabBarIcon: ({tintColor}) => (
             <Image
                 source={require('../assets/images/person.png')}
@@ -23,22 +23,50 @@ class PersonPage extends Component {
             />
         ),
     };
+    user;
+
+    componentWillMount() {
+        this.checkLogin();
+    }
+
+    // 状态更新，判断是否登录并作出处理
+    shouldComponentUpdate(nextProps, nextState) {
+        console.warn('状态更新');
+        // 登录完成,切成功登录
+        if (nextProps.status === '登陆成功' && nextProps.isSuccess) {
+            // this.props.navigation.dispatch(resetAction);
+            this.checkLogin();
+            return false;
+        }
+        return true;
+    }
+
+    checkLogin() {
+        global.storage.load({
+            key: 'user',
+            autoSync: false,
+        }).then(ret => {
+            if (!ret || !ret.name) {
+                this.props.navigation.dispatch(resetAction);
+            }
+            this.user = ret;
+        }).catch(err => {
+            // console.warn(err.message);
+        });
+    }
 
     logout() {
+        global.storage.remove({key: 'user'});
         this.props.navigation.dispatch(resetAction)
     }
 
     render() {
-        const {user} = this.props.navigation;
         return (
             <View style={styles.container}>
-                <Text style={{fontSize: 20}}>您好,{user}!</Text>
+                <Text>状态: {this.props.status}</Text>
+                <Text style={{fontSize: 20}}>您好,{this.user ? this.user.nikeName : ''}!</Text>
                 <Text>欢迎使用本产品！</Text>
-                <TouchableOpacity onPress={this.logout.bind(this)} style={{marginTop: 50}}>
-                    <View>
-                        <Text>退出登录</Text>
-                    </View>
-                </TouchableOpacity>
+                <CButton title={'注销'} onPress={() => this.logout()}/>
             </View>
         )
     }
@@ -53,6 +81,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
+        alignItems: 'center',
         padding: 20,
         backgroundColor: THEME_BACKGROUND
     }

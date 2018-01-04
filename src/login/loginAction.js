@@ -21,7 +21,7 @@ export function login(username, password) {
         } else {
             dispatch(loginError(false));
         }
-        /*let result = fetch('https://www.baidu.com/')
+        /*let result = fetch('https://localhost:8088/login')
          .then((res) => {
          dispatch(loginSuccess(true, user));
          }).catch((e) => {
@@ -38,6 +38,10 @@ function isLogining() {
 
 function loginSuccess(isSuccess, user) {
     console.log('success');
+    global.storage.save({
+        key: 'user',
+        data: user
+    });
     return {
         type: types.LOGIN_IN_DONE,
         user: user,
@@ -48,45 +52,5 @@ function loginError(isSuccess) {
     console.log('error');
     return {
         type: types.LOGIN_IN_ERROR,
-    }
-}
-
-export function reg(username, password) {
-    console.log('注册方法');
-    return dispatch => {
-        dispatch(isReging());
-        // 模拟用户登录
-        if (username === user.name && password === user.pwd) {
-            dispatch(regSuccess(true, user));
-        } else {
-            dispatch(regError(false));
-        }
-        /*let result = fetch('https://www.baidu.com/')
-         .then((res) => {
-         dispatch(loginSuccess(true, user));
-         }).catch((e) => {
-         dispatch(loginError(false));
-         })*/
-    }
-}
-
-function isReging() {
-    return {
-        type: types.REG_DOING
-    }
-}
-
-function regSuccess(isSuccess, user) {
-    console.log('success');
-    return {
-        type: types.REG_DONE,
-        user: user,
-    }
-}
-
-function regError(isSuccess) {
-    console.log('error');
-    return {
-        type: types.REG_ERROR,
     }
 }

@@ -1,5 +1,5 @@
 'use strict';
-import * as types from '../constants/loginTypes';
+import * as types from '../constants/regTypes';
 
 const initialState = {
     status: '点击注册',
