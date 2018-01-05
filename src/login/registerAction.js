@@ -2,7 +2,7 @@
 
 import * as types from '../constants/regTypes';
 
-export function reg(username, password) {
+export function reg(mobile, password) {
     console.log('注册方法');
     return dispatch => {
         dispatch(isReging());

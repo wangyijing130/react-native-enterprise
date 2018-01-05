@@ -7,16 +7,17 @@ let user = {
     name: 'eking',
     nikeName: '羿璟',
     age: 30,
-    pwd: '123456'
+    pwd: '123456',
+    mobile: 13510005217
 };
 
 // 访问登录接口 根据返回结果来划分action属于哪个type,然后返回对象,给reducer处理
-export function login(username, password) {
+export function login(mobile, password) {
     console.log('登录方法');
     return dispatch => {
         dispatch(isLogining());
         // 模拟用户登录
-        if (username === user.name && password === user.pwd) {
+        if (mobile === '' + user.mobile && password === user.pwd) {
             dispatch(loginSuccess(true, user));
         } else {
             dispatch(loginError(false));

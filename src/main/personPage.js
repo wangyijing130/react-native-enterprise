@@ -23,8 +23,6 @@ class PersonPage extends Component {
             />
         ),
     };
-    user;
-
     componentWillMount() {
         this.checkLogin();
     }
@@ -49,7 +47,6 @@ class PersonPage extends Component {
             if (!ret || !ret.name) {
                 this.props.navigation.dispatch(resetAction);
             }
-            this.user = ret;
         }).catch(err => {
             // console.warn(err.message);
         });
@@ -63,10 +60,10 @@ class PersonPage extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text>状态: {this.props.status}</Text>
-                <Text style={{fontSize: 20}}>您好,{this.user ? this.user.nikeName : ''}!</Text>
+                <Text style={{fontSize: 20}}>您好,{this.props.user && this.props.user.nikeName }!</Text>
                 <Text>欢迎使用本产品！</Text>
                 <CButton title={'注销'} onPress={() => this.logout()}/>
+                <Text>状态: {this.props.status}</Text>
             </View>
         )
     }
@@ -81,7 +78,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
         padding: 20,
         backgroundColor: THEME_BACKGROUND
     }
@@ -89,7 +85,9 @@ const styles = StyleSheet.create({
 
 export default connect(
     (state) => ({
-        user: state.user
+        status: state.loginIn.status,
+        isSuccess: state.loginIn.isSuccess,
+        user: state.loginIn.user
     }),
     (dispatch) => ({})
 )(PersonPage)

@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TextInput, Alert} from 'react-native';
+import {View, Text, StyleSheet, TextInput} from 'react-native';
 import {NavigationActions} from 'react-navigation';
-import {connect} from 'react-redux'; // 引入connect函数
-import * as registerAction from './registerAction';// 导入action方法
 import {THEME, THEME_BACKGROUND, THEME_TEXT} from '../assets/css/color';
 import {DefaultStackNavigator} from '../common/stackNavigator';
 import CButton from '../common/button';
@@ -15,25 +13,47 @@ const resetAction = NavigationActions.reset({
     ]
 });
 
-class RegPage extends Component {
-    static navigationOptions = DefaultStackNavigator('注册');
+export class FindAccountPage extends Component {
+    static navigationOptions = DefaultStackNavigator('找回密码');
     mobile = '';
+    code = '';
     password = '';
     password2 = '';
+    timer;
 
     constructor(props) {
         super(props);
-        this.state = {message: ''};
+        this.state = {message: '', sendFlag: false, second: 30};
     }
 
-    // 状态更新
-    shouldComponentUpdate(nextProps, nextState) {
-        // 注册成功,切到登录
-        if (nextProps.status === '注册成功' && nextProps.isSuccess) {
-            this.props.navigation.dispatch(resetAction);
-            return false;
+    componentWillUnmount() {
+        this.timer && clearInterval(this.timer);
+    }
+
+    getCode() {
+        if (!this.mobile) {
+            this.updateState('message', '请输入手机号码');
+            return;
         }
-        return true;
+        if (this.state.sendFlag) {
+            this.updateState('message', '操作过于频繁');
+            return;
+        }
+        // 倒计时30s
+        this.updateState('sendFlag', true);
+        this.timer = setInterval(
+            () => {
+                if (this.state.second <= 0) {
+                    this.updateState('second', 0);
+                    this.updateState('sendFlag', false);
+                    this.timer && clearInterval(this.timer);
+                } else {
+                    this.updateState('second', this.state.second - 1);
+                }
+            },
+            1000
+        );
+
     }
 
     updateState(key, val) {
@@ -42,10 +62,13 @@ class RegPage extends Component {
         this.setState(state);
     }
 
-    doReg() {
-        const {reg} = this.props;
+    doSubmit() {
         if (!this.mobile) {
             this.updateState('message', '请输入手机号码');
+            return;
+        }
+        if (!this.code) {
+            this.updateState('message', '请输入手机验证码');
             return;
         }
         if (!this.password) {
@@ -60,7 +83,7 @@ class RegPage extends Component {
             this.updateState('message', '前后两次密码不一致');
             return;
         }
-        reg(this.mobile, this.password);
+        this.goBack();
     }
 
     goBack() {
@@ -69,20 +92,30 @@ class RegPage extends Component {
 
     render() {
         let message = this.state && this.state.message ? this.state.message : '';
+        let codeBtnText = this.state && this.state.sendFlag && this.state.second ? '已发送' + this.state.second + 's' : '获取验证码';
+        let codeBtnStyle = this.state && this.state.sendFlag ? styles.codeBtnDisabled : styles.codeBtn;
         return (
+
             <View style={styles.regPage}>
                 <TextInput style={styles.regInput} placeholder='手机号码' keyboardType={'numeric'}
-                           autoCapitalize={'none'} maxLength={20}
+                           autoCapitalize={'none'} maxLength={11}
                            onChangeText={(text) => this.mobile = text}/>
+                <View style={[styles.codeRow, styles.regInput]}>
+                    <TextInput style={{flex: 1}} placeholder='手机验证码' keyboardType={'numeric'}
+                               autoCapitalize={'none'} maxLength={6}
+                               onChangeText={(text) => this.code = text}/>
+                    <CButton disabled={this.state.sendFlag}
+                             style={codeBtnStyle} title={codeBtnText}
+                             onPress={() => this.getCode()}/>
+                </View>
                 <TextInput style={styles.regInput} placeholder='密码' secureTextEntry={true}
                            autoCapitalize={'none'} maxLength={20}
                            onChangeText={(text) => this.password = text}/>
                 <TextInput style={styles.regInput} placeholder='确认密码' secureTextEntry={true}
                            autoCapitalize={'none'} maxLength={20}
                            onChangeText={(text) => this.password2 = text}/>
-                <CButton style={styles.regInput} title={'提交'} onPress={() => this.doReg()}/>
+                <CButton style={styles.regInput} title={'找回密码'} onPress={() => this.doSubmit()}/>
                 <Text style={styles.message}>{message}</Text>
-                <Text style={{marginTop: 16, fontSize: 12}}>状态: {this.props.status}</Text>
             </View>
         )
     }
@@ -92,26 +125,24 @@ const styles = StyleSheet.create({
     regPage: {
         flex: 1,
         flexDirection: 'column',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         padding: 20,
+        paddingTop: 100,
         backgroundColor: THEME_BACKGROUND
     },
     regInput: {
         marginBottom: 8
     },
+    codeRow: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    codeBtn: {flexBasis: 120},
+    codeBtnDisabled: {flexBasis: 120, backgroundColor: THEME_TEXT},
     message: {
         marginTop: 16,
         color: THEME_TEXT,
         fontSize: 14
     }
 });
-
-export default connect(
-    (state) => ({
-        status: state.reg.status,
-        isSuccess: state.reg.isSuccess
-    }),
-    (dispatch) => ({
-        reg: (u, p) => dispatch(registerAction.reg(u, p)),
-    })
-)(RegPage)
