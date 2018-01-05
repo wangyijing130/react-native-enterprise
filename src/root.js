@@ -11,7 +11,7 @@ store.subscribe(() => {
 export default class Root extends Component {
     render() {
         return (
-            // 实现组件和store的关联
+            // 实现app和store的关联，等于整个系统的组件都被包含住了
             <Provider store={store}>
                 <App/>
             </Provider>

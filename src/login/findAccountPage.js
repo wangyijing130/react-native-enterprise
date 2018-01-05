@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, TextInput} from 'react-native';
 import {NavigationActions} from 'react-navigation';
 import {THEME, THEME_BACKGROUND, THEME_TEXT} from '../assets/css/color';
-import {DefaultStackNavigator} from '../common/stackNavigator';
+import {getStackOptions} from '../common/navigatorOpts';
 import CButton from '../common/button';
 
 // 清空导航记录，跳转到首页
@@ -14,7 +14,7 @@ const resetAction = NavigationActions.reset({
 });
 
 export class FindAccountPage extends Component {
-    static navigationOptions = DefaultStackNavigator('找回密码');
+    static navigationOptions = getStackOptions('找回密码');
     mobile = '';
     code = '';
     password = '';

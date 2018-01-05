@@ -7,12 +7,12 @@ import GamePage from './gamePage';
 import PersonPage from './personPage';
 
 export const MainNavigator = TabNavigator({
-        Message: {screen: MessagePage},
-        Contact: {screen: ContactPage},
-        Game: {screen: GamePage},
-        Person: {screen: PersonPage}
+        Message: {screen: MessagePage}, // 留言
+        Contact: {screen: ContactPage}, // 通讯录
+        Game: {screen: GamePage}, // 游戏
+        Person: {screen: PersonPage} // 个人中心
     }, {
-        tabBarPosition: 'bottom',
+        tabBarPosition: 'bottom', // 标签显示在底部
         tabBarOptions: {
             activeTintColor: 'white',
             style: {
@@ -26,7 +26,7 @@ export const MainNavigator = TabNavigator({
                 marginTop: 0,
                 marginBottom: 0
             },
-            showIcon: true
+            showIcon: true  // 显示图标
         }
     }
 );

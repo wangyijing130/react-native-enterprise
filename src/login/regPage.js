@@ -4,7 +4,7 @@ import {NavigationActions} from 'react-navigation';
 import {connect} from 'react-redux'; // 引入connect函数
 import * as registerAction from './registerAction';// 导入action方法
 import {THEME, THEME_BACKGROUND, THEME_TEXT} from '../assets/css/color';
-import {DefaultStackNavigator} from '../common/stackNavigator';
+import {getStackOptions} from '../common/navigatorOpts';
 import CButton from '../common/button';
 
 // 清空导航记录，跳转到首页
@@ -16,7 +16,7 @@ const resetAction = NavigationActions.reset({
 });
 
 class RegPage extends Component {
-    static navigationOptions = DefaultStackNavigator('注册');
+    static navigationOptions = getStackOptions('注册');
     mobile = '';
     password = '';
     password2 = '';
